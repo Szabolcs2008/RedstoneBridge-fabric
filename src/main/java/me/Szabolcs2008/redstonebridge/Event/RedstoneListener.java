@@ -5,14 +5,10 @@ import me.Szabolcs2008.redstonebridge.Config.Config;
 import me.Szabolcs2008.redstonebridge.RedstoneBridge;
 import me.Szabolcs2008.redstonebridge.Util.UpdateData;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.util.thread.ThreadExecutor;
 
 import java.io.IOException;
 import java.net.URI;
@@ -24,7 +20,6 @@ import java.net.http.HttpResponse;
 public class RedstoneListener {
 
     public static void registerEvents() {
-        // Register server tick event to process redstone updates
         ServerTickEvents.END_WORLD_TICK.register(RedstoneListener::processRedstoneUpdate);
     }
 

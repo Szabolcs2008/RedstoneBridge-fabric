@@ -1,12 +1,9 @@
 package me.Szabolcs2008.redstonebridge.Config;
 
-import com.fasterxml.jackson.core.json.*;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.util.JSONPObject;
-import me.Szabolcs2008.redstonebridge.RedstoneBridge;
 import net.fabricmc.loader.api.FabricLoader;
 
 import java.io.File;

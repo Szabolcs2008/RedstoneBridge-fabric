@@ -1,12 +1,10 @@
 package me.Szabolcs2008.redstonebridge;
 
-import com.mojang.brigadier.CommandDispatcher;
 import me.Szabolcs2008.redstonebridge.Config.Bridges;
 import me.Szabolcs2008.redstonebridge.Event.RedstoneListener;
 import me.Szabolcs2008.redstonebridge.Util.LastUpdateStorage;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.fabricmc.loader.api.FabricLoader;
 import me.Szabolcs2008.redstonebridge.Config.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

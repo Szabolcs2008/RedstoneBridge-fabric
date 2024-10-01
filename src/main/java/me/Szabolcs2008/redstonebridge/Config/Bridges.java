@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import me.Szabolcs2008.redstonebridge.RedstoneBridge;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Position;
 
 import java.io.File;
 import java.io.IOException;

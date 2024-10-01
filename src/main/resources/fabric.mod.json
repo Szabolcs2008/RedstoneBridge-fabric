@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "redstonebridge-fabric",
+  "version": "${version}",
+  "name": "RedstoneBridge-fabric",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "LGPL-3.0",
+  "icon": "assets/redstonebridge-fabric/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "me.Szabolcs2008.redstonebridge.RedstoneBridge"
+    ]
+  },
+  "mixins": [
+    "redstonebridge-fabric.mixins.json",
+    {
+      "config": "redstonebridge-fabric.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}

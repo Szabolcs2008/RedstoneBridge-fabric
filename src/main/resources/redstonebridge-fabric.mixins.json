@@ -1,7 +1,7 @@
 {
-  "required": true,
+  "required": false,
   "minVersion": "0.8",
-  "package": "me.Szabolcs2008.redstonebridge.mixin",
+  "package": "",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
   ],

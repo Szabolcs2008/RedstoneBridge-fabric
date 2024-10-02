@@ -14,13 +14,7 @@
       "me.Szabolcs2008.redstonebridge.RedstoneBridge"
     ]
   },
-  "mixins": [
-    "redstonebridge-fabric.mixins.json",
-    {
-      "config": "redstonebridge-fabric.client.mixins.json",
-      "environment": "client"
-    }
-  ],
+  "mixins": [],
   "depends": {
     "fabricloader": ">=${loader_version}",
     "fabric": "*",

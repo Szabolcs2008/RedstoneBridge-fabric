@@ -1,9 +1,14 @@
 plugins {
     id 'fabric-loom' version '1.8-SNAPSHOT'
     id 'maven-publish'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
-version = project.mod_version
+shadowJar {
+    configurations = [project.configurations.shadow]
+}
+
+version = "mc" + project.minecraft_version + "_v" + project.mod_version
 group = project.maven_group
 
 base {
@@ -36,7 +41,10 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-    implementation "com.fasterxml.jackson.core:jackson-databind:2.16.1"
+
+    shadow(implementation("com.fasterxml.jackson.core:jackson-databind:2.16.1"))
+    shadow(implementation("com.fasterxml.jackson.core:jackson-core:2.16.1"))
+    shadow(implementation("com.fasterxml.jackson.core:jackson-annotations:2.16.1"))
 }
 
 processResources {
@@ -79,6 +87,11 @@ jar {
     from("LICENSE") {
         rename { "${it}_${project.archivesBaseName}" }
     }
+}
+
+remapJar {
+    dependsOn(shadowJar)
+    inputFile = tasks.shadowJar.archiveFile
 }
 
 // configure the maven publication

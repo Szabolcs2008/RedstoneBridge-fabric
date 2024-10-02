@@ -23,7 +23,7 @@ public class RedstoneBridge implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        LOGGER.info("Hello Fabric world!");
+        LOGGER.info("REDSTONE IRL!?");
         Config.init();
         try {
             bridges.init();

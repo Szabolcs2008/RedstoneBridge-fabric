@@ -1,6 +1,7 @@
 package me.Szabolcs2008.redstonebridge.Event;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import me.Szabolcs2008.redstonebridge.Config.Bridges;
 import me.Szabolcs2008.redstonebridge.Config.Config;
 import me.Szabolcs2008.redstonebridge.RedstoneBridge;
 import me.Szabolcs2008.redstonebridge.Util.UpdateData;
@@ -36,19 +37,20 @@ public class RedstoneListener {
 
                     for (String name : RedstoneBridge.bridges.listBridges()) {
                         JsonNode bridge = RedstoneBridge.bridges.getBridge(name);
-                        if (bridge.get("block-x").asInt() == pos.getX() && bridge.get("block-y").asInt() == pos.getY() && bridge.get("block-z").asInt() == pos.getZ()) {
-                            UpdateData thisUpdate = new UpdateData(name, powered, powerLevel, pos);
+                        if (bridge.get(Bridges.X).asInt() == pos.getX() && bridge.get(Bridges.Y).asInt() == pos.getY() && bridge.get(Bridges.Z).asInt() == pos.getZ()) {
+                            UpdateData thisUpdate = new UpdateData(name, powerLevel, pos);
                             if (RedstoneBridge.lastUpdateStorage.getLastUpdate(name) == null || !thisUpdate.toString().equals(RedstoneBridge.lastUpdateStorage.getLastUpdate(name).toString())) {
                                 RedstoneBridge.lastUpdateStorage.setLastUpdate(name, thisUpdate);
                                 String json;
                                 String mode = bridge.get("mode").asText();
-                                if (mode.equalsIgnoreCase("switch")) {
-                                    json = "{\"name\": \""+name+"\", \"mode\": \"SWITCH\", \"powered\": "+powered+"}";
-                                } else if (mode.equalsIgnoreCase("rgb")) {
+                                if (mode.equalsIgnoreCase(Bridges.DIGITAL.toLowerCase())) {
+                                    int state = powered? 1 : 0;
+                                    json = "{\"bridgeName\": \""+name+"\", \"bridgeType\": \""+Bridges.DIGITAL+"\", \"data\": "+state+"}";
+                                } else if (mode.equalsIgnoreCase(Bridges.RGB.toLowerCase())) {
                                     String color = Config.getConfig().get("colors").get(String.valueOf(powerLevel)).asText();
-                                    json = "{\"name\": \""+name+"\", \"mode\": \"RGB\", \"powered\": "+powered+", \"power-level\": "+powerLevel+", \"color\": \""+color+"\"}";
-                                } else if (mode.equalsIgnoreCase("analogue")) {
-                                    json = "{\"name\": \""+name+"\", \"mode\": \"ANALOGUE\", \"powered\": "+powered+", \"power-level\": "+powerLevel+"}";
+                                    json = "{\"bridgeName\": \""+name+"\", \"bridgeType\": \""+Bridges.RGB+"\", \"data\": \""+color+"\"}";
+                                } else if (mode.equalsIgnoreCase(Bridges.ANALOGUE.toLowerCase())) {
+                                    json = "{\"bridgeName\": \""+name+"\", \"bridgeType\": \""+Bridges.ANALOGUE+"\", \"data\": "+powerLevel+"}";
                                 } else {
                                     json = "{}";
                                 }

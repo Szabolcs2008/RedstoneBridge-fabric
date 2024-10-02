@@ -16,15 +16,17 @@ import java.util.Map;
 
 public class Bridges {
 
-    public final String X = "block-x";
-    public final String Y = "block-y";
-    public final String Z = "block-z";
-    public final String URL = "url";
-    public final String MODE = "mode";
+    public static final String X = "location-x";
+    public static final String Y = "location-y";
+    public static final String Z = "location-z";
+    public static final String URL = "url";
+    public static final String MODE = "mode";
+    public static final String ENABLED = "enabled";
 
-    public final String SWITCH = "SWITCH";
-    public final String ANALOGUE = "ANALOGUE";
-    public final String RGB = "RGB";
+
+    public static final String DIGITAL = "DIGITAL";
+    public static final String ANALOGUE = "ANALOGUE";
+    public static final String RGB = "RGB";
 
 
     private final Path configDir = Config.getConfigDir();
@@ -51,7 +53,7 @@ public class Bridges {
 
         for (String name : listBridges()) {
             JsonNode bridge = bridges.get(name);
-            BlockPos loc = new BlockPos(bridge.get("block-x").asInt(), bridge.get("block-y").asInt(), bridge.get("block-z").asInt());
+            BlockPos loc = new BlockPos(bridge.get(X).asInt(), bridge.get(Y).asInt(), bridge.get(Z).asInt());
 
             if (!validCoordinates.contains(loc)) {
                 validCoordinates.add(loc);
@@ -83,9 +85,10 @@ public class Bridges {
         ObjectNode bridge = objectMapper.createObjectNode();
 
         bridge.put("mode", mode);
-        bridge.put("block-x", location.getX());
-        bridge.put("block-y", location.getY());
-        bridge.put("block-z", location.getZ());
+        bridge.put("location-x", location.getX());
+        bridge.put("location-y", location.getY());
+        bridge.put("location-z", location.getZ());
+        bridge.put("enabled", true);
         bridge.set("url", null);
 
         bridges.set(name, bridge);
@@ -93,19 +96,19 @@ public class Bridges {
     }
 
     public void removeBridge(String name) {
-        BlockPos old_loc = new BlockPos(bridges.get(name).get("block-x").asInt(), bridges.get(name).get("block-y").asInt(), bridges.get(name).get("block-z").asInt());
+        BlockPos old_loc = new BlockPos(bridges.get(name).get(X).asInt(), bridges.get(name).get(Y).asInt(), bridges.get(name).get(Z).asInt());
         bridges.remove(name);
         validCoordinates.remove(old_loc);
     }
 
     public void moveBridge(String name, BlockPos newLocaction) {
-        BlockPos old_loc = new BlockPos(bridges.get(name).get("block-x").asInt(), bridges.get(name).get("block-y").asInt(), bridges.get(name).get("block-z").asInt());
+        BlockPos old_loc = new BlockPos(bridges.get(name).get(X).asInt(), bridges.get(name).get(Y).asInt(), bridges.get(name).get(Z).asInt());
         validCoordinates.remove(old_loc);
 
         ObjectNode bridge = (ObjectNode) bridges.get(name);
-        bridge.put("block-x", newLocaction.getX());
-        bridge.put("block-y", newLocaction.getY());
-        bridge.put("block-z", newLocaction.getZ());
+        bridge.put(X, newLocaction.getX());
+        bridge.put(Y, newLocaction.getY());
+        bridge.put(Z, newLocaction.getZ());
 
         validCoordinates.add(newLocaction);
         bridges.set(name, bridge);
@@ -129,6 +132,13 @@ public class Bridges {
             output.add(item.getKey());
         }
         return output;
+    }
+
+    public void toggleBridge(String name, boolean enabled) {
+        ObjectNode bridge = (ObjectNode) bridges.get(name);
+        bridge.put("enabled", enabled);
+
+        bridges.set(name, bridge);
     }
 
 }

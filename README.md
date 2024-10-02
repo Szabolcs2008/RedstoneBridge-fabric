@@ -1,5 +1,5 @@
 # RedstoneBridge
-A fabric mod to connect Minecraft redstone with real life lights.
+A fabric mod to connect Minecraft redstone with real life.
 
 # Setting up
 You need some coding knowledge to set this up! The mod is originally designed for my rgb control software (which is not public at the moment), so you will need an external http server to use it.

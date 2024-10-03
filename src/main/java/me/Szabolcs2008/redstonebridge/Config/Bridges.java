@@ -81,7 +81,7 @@ public class Bridges {
         return bridges;
     }
 
-    public void addBridge(String name, String mode, BlockPos location) {
+    public void addBridge(String name, String mode, BlockPos location, String url) {
         ObjectNode bridge = objectMapper.createObjectNode();
 
         bridge.put("mode", mode);
@@ -89,7 +89,7 @@ public class Bridges {
         bridge.put("location-y", location.getY());
         bridge.put("location-z", location.getZ());
         bridge.put("enabled", true);
-        bridge.set("url", null);
+        bridge.put("url", url);
 
         bridges.set(name, bridge);
         validCoordinates.add(location);
@@ -139,6 +139,10 @@ public class Bridges {
         bridge.put("enabled", enabled);
 
         bridges.set(name, bridge);
+    }
+
+    public boolean isEnabled(String name) {
+        return bridges.get(name).get(ENABLED).asBoolean();
     }
 
 }

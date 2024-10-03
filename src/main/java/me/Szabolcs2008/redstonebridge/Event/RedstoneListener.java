@@ -32,41 +32,43 @@ public class RedstoneListener {
                     RedstoneBridge.LOGGER.info(blockState.getBlock().toString()+" @ "+pos.toString());
                 }
                 if (!blockState.isAir() && (Config.getWhitelistedBlocks().contains(blockState.getBlock().toString()) || !Config.getConfig().get("enable-whitelist").asBoolean())) {
-                    int powerLevel = world.getReceivedRedstonePower(pos);
-                    boolean powered = powerLevel > 0;
+                    new Thread(() -> {
+                        int powerLevel = world.getReceivedRedstonePower(pos);
+                        boolean powered = powerLevel > 0;
 
-                    for (String name : RedstoneBridge.bridges.listBridges()) {
-                        JsonNode bridge = RedstoneBridge.bridges.getBridge(name);
-                        if (bridge.get(Bridges.X).asInt() == pos.getX() && bridge.get(Bridges.Y).asInt() == pos.getY() && bridge.get(Bridges.Z).asInt() == pos.getZ()) {
-                            UpdateData thisUpdate = new UpdateData(name, powerLevel, pos);
-                            if (RedstoneBridge.lastUpdateStorage.getLastUpdate(name) == null || !thisUpdate.toString().equals(RedstoneBridge.lastUpdateStorage.getLastUpdate(name).toString())) {
-                                RedstoneBridge.lastUpdateStorage.setLastUpdate(name, thisUpdate);
-                                String json;
-                                String mode = bridge.get("mode").asText();
-                                if (mode.equalsIgnoreCase(Bridges.DIGITAL.toLowerCase())) {
-                                    int state = powered? 1 : 0;
-                                    json = "{\"bridgeName\": \""+name+"\", \"bridgeType\": \""+Bridges.DIGITAL+"\", \"data\": "+state+"}";
-                                } else if (mode.equalsIgnoreCase(Bridges.RGB.toLowerCase())) {
-                                    String color = Config.getConfig().get("colors").get(String.valueOf(powerLevel)).asText();
-                                    json = "{\"bridgeName\": \""+name+"\", \"bridgeType\": \""+Bridges.RGB+"\", \"data\": \""+color+"\"}";
-                                } else if (mode.equalsIgnoreCase(Bridges.ANALOGUE.toLowerCase())) {
-                                    json = "{\"bridgeName\": \""+name+"\", \"bridgeType\": \""+Bridges.ANALOGUE+"\", \"data\": "+powerLevel+"}";
-                                } else {
-                                    json = "{}";
-                                }
-                                if (Config.getConfig().get("debug").asBoolean()) {
-                                    RedstoneBridge.LOGGER.info(json);
-                                }
-                                if (!bridge.get("url").isNull()) {
-                                    new Thread(() -> sendHttpRequest(bridge.get("url").asText(), json)).start();
-                                } else {
+                        for (String name : RedstoneBridge.bridges.listBridges()) {
+                            JsonNode bridge = RedstoneBridge.bridges.getBridge(name);
+                            if (bridge.get(Bridges.ENABLED).asBoolean() && bridge.get(Bridges.X).asInt() == pos.getX() && bridge.get(Bridges.Y).asInt() == pos.getY() && bridge.get(Bridges.Z).asInt() == pos.getZ()) {
+                                UpdateData thisUpdate = new UpdateData(name, powerLevel, pos);
+                                if (RedstoneBridge.lastUpdateStorage.getLastUpdate(name) == null || !thisUpdate.toString().equals(RedstoneBridge.lastUpdateStorage.getLastUpdate(name).toString())) {
+                                    RedstoneBridge.lastUpdateStorage.setLastUpdate(name, thisUpdate);
+                                    String json;
+                                    String mode = bridge.get("mode").asText();
+                                    if (mode.equalsIgnoreCase(Bridges.DIGITAL.toLowerCase())) {
+                                        int state = powered? 1 : 0;
+                                        json = "{\"bridgeName\": \""+name+"\", \"bridgeType\": \""+Bridges.DIGITAL+"\", \"data\": "+state+"}";
+                                    } else if (mode.equalsIgnoreCase(Bridges.RGB.toLowerCase())) {
+                                        String color = Config.getConfig().get("colors").get(String.valueOf(powerLevel)).asText();
+                                        json = "{\"bridgeName\": \""+name+"\", \"bridgeType\": \""+Bridges.RGB+"\", \"data\": \""+color+"\"}";
+                                    } else if (mode.equalsIgnoreCase(Bridges.ANALOGUE.toLowerCase())) {
+                                        json = "{\"bridgeName\": \""+name+"\", \"bridgeType\": \""+Bridges.ANALOGUE+"\", \"data\": "+powerLevel+"}";
+                                    } else {
+                                        json = "{}";
+                                    }
                                     if (Config.getConfig().get("debug").asBoolean()) {
-                                        RedstoneBridge.LOGGER.info(name+": URL IS NULL!");
+                                        RedstoneBridge.LOGGER.info(json);
+                                    }
+                                    if (!bridge.get("url").isNull()) {
+                                        sendHttpRequest(bridge.get("url").asText(), json);
+                                    } else {
+                                        if (Config.getConfig().get("debug").asBoolean()) {
+                                            RedstoneBridge.LOGGER.info(name+": URL IS NULL!");
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
+                    }).start();
                 }
             }
         }
